@@ -73,8 +73,9 @@ const contributionsCard = document.getElementById("num-contributions");
 
 // use reduce() to count the number of total contributions by summing the backers
 contributionsCard.innerHTML = (GAMES_JSON.reduce( (acc,game) => {
-    return acc + game.backers
-},0)).toLocaleString('en-US')
+    return acc + game.backers},
+    0)
+).toLocaleString('en-US')
 
 // set the inner HTML using a template literal and toLocaleString to get a number with commas
 
@@ -98,6 +99,13 @@ gamesCard.innerHTML = (GAMES_JSON.length).toLocaleString('en-US')
 */
 
 // show only games that do not yet have enough funding
+
+function scrollToGamesSection() {
+    const gamesSection = document.getElementById("games-container");
+    gamesSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+
 function filterUnfundedOnly() {
     deleteChildElements(gamesContainer);
 
@@ -107,6 +115,7 @@ function filterUnfundedOnly() {
     })
     // use the function we previously created to add the unfunded games to the DOM
     addGamesToPage(notMetGoal)
+    scrollToGamesSection();
 }
 
 // show only games that are fully funded
@@ -120,6 +129,7 @@ function filterFundedOnly() {
     
     // use the function we previously created to add unfunded games to the DOM
     addGamesToPage(haveFundedOnly)
+    scrollToGamesSection();
 }
 // show all games
 function showAllGames() {
@@ -127,6 +137,7 @@ function showAllGames() {
 
     // add all games from the JSON data to the DOM
     addGamesToPage(GAMES_JSON)
+    scrollToGamesSection();
 }
 
 // select each button in the "Our Games" section
@@ -149,9 +160,6 @@ const descriptionContainer = document.getElementById("description-container");
 
 // use filter or reduce to count the number of unfunded games
 
-// const num = GAMES_JSON.filter((game) => {
-//     return game.pledged < game.goal
-// }).length
 
 const numUnfundedGame = GAMES_JSON.reduce( (acc,game) => {
     if (game.pledged < game.goal) {
@@ -174,10 +182,6 @@ const displayStr = `
     ${(GAMES_JSON.length === currentFundedGame) ? `All 11 games are funded. Thank you for your fund!` : `A total of $${fundedGameMoney} has been raised to ${currentFundedGame} ${currentFundedGame >0 ? 'games' : 'game'}. We have ${currentUnfundedGame} ${currentUnfundedGame > 1 ? 'remain' : 'remains'} unfunded. We need your help to fund these amazing ${currentUnfundedGame > 0 ? 'games' : 'game'}!`}
 `
 
-// console.log(`Current number of funded games ${currentFundedGame}`)
-// console.log(`Current number of UNfunded games ${currentUnfundedGame}`)
-// console.log(`Current money of funded game ${fundedGameMoney}`)
-// console.log(displayStr)
 
 // create a new DOM element containing the template string and append it to the description container
 const new_para = document.createElement('p')
@@ -210,3 +214,5 @@ const secondGameName = document.createElement('p')
 secondGameName.textContent = secondGame.name
 secondGameContainer.appendChild(secondGameName)
 // do the same for the runner up item
+
+filterFundedOnly();
